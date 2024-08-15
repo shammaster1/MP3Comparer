@@ -6,11 +6,11 @@ Finds MP3s missing when comparing two folders and copies over missing files if p
 
 Example of folder comparison:
 
-- folder 1:
+- folder 1:\
   ![alt text](image_examples/ex1.jpg "Folder 1")
-- folder 2:
+- folder 2:\
   ![alt text](image_examples/ex2.jpg "Folder 2")
-- result of comparing folder 2 to 1:
+- result of comparing folder 2 to 1:\
   ![alt text](image_examples/ex3.jpg "Result")
 
 ## Details
