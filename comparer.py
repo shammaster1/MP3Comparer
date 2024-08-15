@@ -15,17 +15,6 @@ def folder_data(path1):
             songs.append(x + ", " + str(TinyTag.get(x)))
     return songs
 
-#get all songs and meta data from folder 2
-def second_folder(path2):
-    songs2 = []
-    songs2.append(path2)
-    os.chdir(path2)
-    for x in os.listdir(path2): # for files in directory
-        if x.endswith(".mp3"):
-            # append only mp3s to list
-            songs2.append(x + ", " + str(TinyTag.get(x)))
-    return songs2
-
 #compare the folders to see which files are missing from which
 #USES ALL ID3 DATA
 def fullCompare(folder1, folder2):
