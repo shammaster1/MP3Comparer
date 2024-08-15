@@ -2,7 +2,7 @@
 
 ## Description
 
-Finds MP3s missing when comparing two folders and copies over missing files if prompted. Also finds MP3s that are missing tag data (view "Details" below for what "missing tag data" is defined as)
+Finds MP3s missing when comparing two folders and copies over missing files if prompted. Also finds MP3s that are missing tag data (view "Details" below for what "missing tag data" is defined as) and gives the option to create a .txt of the list
 
 Example of folder comparison:
 
