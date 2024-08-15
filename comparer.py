@@ -5,15 +5,15 @@ import os
 import shutil
 
 #get all songs and meta data from folder 1
-def first_folder(path1):
-    songs1 = []
-    songs1.append(path1)
+def folder_data(path1):
+    songs = []
+    songs.append(path1)
     os.chdir(path1)
     for x in os.listdir(path1): # for files in directory
         if x.endswith(".mp3"):
             # append only mp3s to list
-            songs1.append(x + ", " + str(TinyTag.get(x)))
-    return songs1
+            songs.append(x + ", " + str(TinyTag.get(x)))
+    return songs
 
 #get all songs and meta data from folder 2
 def second_folder(path2):
@@ -128,10 +128,10 @@ def main():
         if choice == "1":
             # obtain path for folder 1
             path1 = input("Please enter the path of folder 1: \n>")
-            folder1_data = first_folder(path1)
+            folder1_data = folder_data(path1)
             # obtain path for folder 2
             path2 = input("Please enter the path of folder 2: \n>")
-            folder2_data = second_folder(path2)
+            folder2_data = folder_data(path2)
             # compare folders
             completeList = fullCompare(folder1_data, folder2_data)
             choice1 = input("\nWould you like to copy over these missing files? (y/n)\n>")
@@ -162,7 +162,7 @@ def main():
         elif choice == "2":
             pathChoice2 = input("\nEnter the directory you would like to check:\n>")
             # read folder data
-            folder1_data = first_folder(pathChoice2)
+            folder1_data = folder_data(pathChoice2)
             # see function for specifications
             songList = filesWithNulls(folder1_data, pathChoice2)
             printChoice2 = input("\n Would you like to create a .txt file to list all results? (y/n)\n>")
