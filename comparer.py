@@ -117,7 +117,7 @@ def main():
     valid = False # checks if menu option chosen is valid, if not, reprompt
     while end == False:
         # menu start
-        choice = input("\nWhat would you like to do (enter # option)?\n1. Compare Folders\n2. Find MP3s with missing data\n3. Exit\n>")
+        choice = input("\nWhat would you like to do? (enter # option)\n1. Compare Folders\n2. Find MP3s with missing data\n3. Exit\n>")
         # menu option prompt
         while valid == False:
             if choice not in ["1", "2", "3", "4"]:
