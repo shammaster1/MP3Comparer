@@ -19,5 +19,5 @@ Missing tag data is defined as songs missing one of the following: album, album 
 
 ## Requirements
 
-Python 3.1 or greater (version requirement provided by [Vermin](https://pypi.org/project/vermin/))\
+Python 3.6 or greater\
 [tinytag](https://pypi.org/project/tinytag/)
