@@ -4,11 +4,6 @@ from collections import Counter
 import os
 import shutil
 
-# z:/Coding/Python/Personal/MP3_folder_comparer/1
-# Z:/coding/python/personal/mp3_folder_comparer/2
-# E:/Music
-# Z:/Music/MP3 Files
-
 #get all songs and meta data from folder 1
 def first_folder(path1):
     songs1 = []
@@ -18,10 +13,6 @@ def first_folder(path1):
         if x.endswith(".mp3"):
             # append only mp3s to list
             songs1.append(x + ", " + str(TinyTag.get(x)))
-    '''for x in songs1:
-        print("\n")
-        print(x)
-        print("\n")'''
     return songs1
 
 #get all songs and meta data from folder 2
@@ -33,10 +24,6 @@ def second_folder(path2):
         if x.endswith(".mp3"):
             # append only mp3s to list
             songs2.append(x + ", " + str(TinyTag.get(x)))
-    '''for x in songs2:
-        print("\n")
-        print(x)
-        print("\n")'''
     return songs2
 
 #compare the folders to see which files are missing from which
@@ -119,50 +106,64 @@ def filesWithNulls(fileData, path):
             count +=1
             print(str(count) + ". " + x.split(".mp3")[0] + ".mp3")
     if count == 0:
-        print("None! All MP3s have an album, album artist, artist, genre, title, track, track total, and year.")
+        print("None! All MP3s have an album, album artist, artist, genre, title, track, and year.")
     print("\n")
     return fileDataList
 
 def main():
+    # menu functionality implemented here
     cwd = os.getcwd()
-    end = False
-    valid = False
+    end = False # exits menu if true
+    valid = False # checks if menu option chosen is valid, if not, reprompt
     while end == False:
+        # menu start
         choice = input("\nWhat would you like to do (enter # option)?\n1. Compare Folders\n2. Find MP3s with missing data\n3. Exit\n>")
+        # menu option prompt
         while valid == False:
             if choice not in ["1", "2", "3", "4"]:
                 choice = input("Please enter a valid choice:\n>")
             else:
                 valid = True
+        # folder comparison option (1)
         if choice == "1":
+            # obtain path for folder 1
             path1 = input("Please enter the path of folder 1: \n>")
             folder1_data = first_folder(path1)
+            # obtain path for folder 2
             path2 = input("Please enter the path of folder 2: \n>")
             folder2_data = second_folder(path2)
+            # compare folders
             completeList = fullCompare(folder1_data, folder2_data)
             choice1 = input("\nWould you like to copy over these missing files? (y/n)\n>")
             valid1 = False
+            # ensure input is valid
             while valid1 == False:
                 if choice1 not in ['y', 'Y', 'n', 'N']:
                     choice1 = input("Please enter a valid choice:\n>")
                 else:
                     valid1 = True
             if choice1 in ['y', 'Y']:
+                # missing files will be copied to folder 1
                 if completeList[-1] == "1":
                     if inputCopyFiles(path2, path1) == 1:
                         copyFiles(completeList, path2, path1)
                     else:
                         print("Copying Canceled")
+                # missing files will be copied to folder 2
                 elif completeList[-1] == "2":
                     if inputCopyFiles(path1, path2) == 1:
                         copyFiles(completeList, path1, path2)
                     else:
                         print("Copying Canceled")
+                # failsafe
                 else:
                     raise Exception("Error: Path could not be found")
+        # missing metadata option (2)
         elif choice == "2":
             pathChoice2 = input("\nEnter the directory you would like to check:\n>")
+            # read folder data
             folder1_data = first_folder(pathChoice2)
+            # see function for specifications
             songList = filesWithNulls(folder1_data, pathChoice2)
             printChoice2 = input("\n Would you like to create a .txt file to list all results? (y/n)\n>")
             valid2 = False
@@ -173,15 +174,22 @@ def main():
                     valid2 = True
             if printChoice2 in ['y', 'Y']:
                 file_name = "songList.txt"
-                os.chdir(cwd)
+                validDestination = False
+                listDestination = input("Enter the destination .txt file:\n")
+                while validDestination == False:
+                    try:
+                        os.chdir(listDestination)
+                        validDestination = True
+                    except:
+                        listDestination = input("Please enter a valid path for the destination:\n")
                 # Open the file in write mode
                 with open(file_name, 'w', encoding="utf-8") as file:
                     file.write("===== Songs Missing Meta Data =====\n")
                     for x in songList:
                         file.write(x + "\n")
                     file.close()
-                print(file_name + " created successfully at " + str(cwd) + ".")
-
+                print(file_name + " created successfully at " + str(listDestination) + ".")
+        # exits program
         elif choice == "3":
             end = True
             print("Thank you for using this program!")
