@@ -53,17 +53,17 @@ def fullCompare(folder1, folder2):
     return missingTitle
 
 # copy all differing mp3s to a specified folder destination
-def copyMP3s(filenames, origin, destination):
-    filenames.pop(-1)
+def copyMP3s(mp3Names, origin, destination):
+    mp3Names.pop(-1)
     count = 0
     print("\nThe following MP3(s) have been successfully copied over: ")
-    for x in filenames:
+    for x in mp3Names:
         count += 1
-        fileToCopy = str(origin) + "/" + x + ".mp3"
+        mp3ToCopy = str(origin) + "/" + x + ".mp3"
         # Specify the path of the destination directory you want to copy to
         destinationDirectory = str(destination)
-        # Use the shutil.copy() method to copy the file to the destination directory
-        shutil.copy(fileToCopy, destinationDirectory)
+        # Use the shutil.copy() method to copy the mp3 to the destination directory
+        shutil.copy(mp3ToCopy, destinationDirectory)
         print(str(count) + ". " + x)
     return
 
@@ -76,30 +76,30 @@ def inputCopyMP3s(origin, destination):
             valid = True
         else:
             choice = input("Please enter a valid character: (y/n)\n>")
-    if choice in ['y','Y']:
+    if choice in ['y', 'Y']:
         return 1
-    elif choice == ['n','N']:
+    elif choice == ['n', 'N']:
         print("hi")
         return 0
 
 # list all mp3s with missing metadata
-def mp3sWithNulls(fileData, path):
+def mp3sWithNulls(mp3Data, path):
     os.chdir(path)
-    fileData.pop(0)
+    mp3Data.pop(0)
     count = 0
-    fileDataList = []
+    mp3DataList = []
     print("\n\nMP3(s) with empty metadata:\n")
-    for x in fileData:
+    for x in mp3Data:
         tag = TinyTag.get(str(x.split(".mp3")[0] + ".mp3"))
         # fields of missing metadata to include
         if tag.album == None or tag.albumartist == None or tag.artist == None or tag.genre == None or tag.title == None or tag.track == None or tag.year == None:
-            fileDataList.append(str(count+1) + ". " + x.split(".mp3")[0] + ".mp3")
+            mp3DataList.append(str(count+1) + ". " + x.split(".mp3")[0] + ".mp3")
             count +=1
             print(str(count) + ". " + x.split(".mp3")[0] + ".mp3")
     if count == 0:
         print("None! All MP3(s) have an album, album artist, artist, genre, title, track, and year.")
     print("\n")
-    return fileDataList
+    return mp3DataList
 
 # menu option 1: obtain two paths, compare the folders, list differences, and optionally, copy over all missing mp3s
 def menuChoice1():
