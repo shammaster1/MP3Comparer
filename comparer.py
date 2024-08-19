@@ -53,24 +53,24 @@ def fullCompare(folder1, folder2):
     print("Total: " + str(count) + "\n")
     return missingTitle
 
+# copy all differing mp3s to a specified folder destination
 def copyFiles(filenames, origin, destination):
     filenames.pop(-1)
+    count = 0
+    print("\nThe following files have been successfully copied over: ")
     for x in filenames:
+        count += 1
         file_to_copy = str(origin) + "/" + x + ".mp3"
         # Specify the path of the destination directory you want to copy to
         destination_directory = str(destination)
         # Use the shutil.copy() method to copy the file to the destination directory
         shutil.copy(file_to_copy, destination_directory)
-    print("\nThe following files have been successfully copied over: ")
-    count = 0
-    for x in filenames:
-        count += 1
         print(str(count) + ". " + x)
     return
 
-#FIX, add option to do vice versa or neither
+# prompt for confirming copy process
 def inputCopyFiles(origin, destination):
-    choice = input("\nCONFIRM: Copy all listed files from '" + origin + "' to the path '" + destination + "'? (y/n):\n>")
+    choice = input("\nCONFIRM: Copy all listed files from '" + origin + "' to the destination '" + destination + "'? (y/n):\n>")
     valid = False
     while valid == False:
         if choice in ['y', 'Y', 'n', 'N']:
@@ -82,6 +82,7 @@ def inputCopyFiles(origin, destination):
     else:
         return 0
 
+# list all mp3s with missing metadata
 def filesWithNulls(fileData, path):
     os.chdir(path)
     fileData.pop(0)
@@ -90,6 +91,7 @@ def filesWithNulls(fileData, path):
     print("\nFiles with empty metadata:\n")
     for x in fileData:
         tag = TinyTag.get(str(x.split(".mp3")[0] + ".mp3"))
+        # fields of missing metadata to include
         if tag.album == None or tag.albumartist == None or tag.artist == None or tag.genre == None or tag.title == None or tag.track == None or tag.year == None:
             fileDataList.append(str(count+1) + ". " + x.split(".mp3")[0] + ".mp3")
             count +=1
