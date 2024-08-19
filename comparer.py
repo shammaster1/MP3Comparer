@@ -79,7 +79,6 @@ def inputCopyMP3s(origin, destination):
     if choice in ['y', 'Y']:
         return 1
     elif choice == ['n', 'N']:
-        print("hi")
         return 0
 
 # list all mp3s with missing metadata
@@ -97,8 +96,7 @@ def mp3sWithNulls(mp3Data, path):
             count +=1
             print(str(count) + ". " + x.split(".mp3")[0] + ".mp3")
     if count == 0:
-        print("None! All MP3(s) have an album, album artist, artist, genre, title, track, and year.")
-    print("\n")
+        print("None! All MP3(s) have an album, album artist, artist, genre, title, track, and year.\n")
     return mp3DataList
 
 # menu option 1: obtain two paths, compare the folders, list differences, and optionally, copy over all missing mp3s
