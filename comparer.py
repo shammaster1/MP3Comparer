@@ -178,7 +178,6 @@ def menuChoice2():
 
 # exits the menu
 def menuChoice3():
-    end = True
     print("Thank you for using this program!")
     return
 
@@ -204,7 +203,8 @@ def main():
             menuChoice2()
         # exits program
         elif choice == "3":
-            end = menuChoice3()
+            menuChoice3()
+            end = True
     return
 
 main()
