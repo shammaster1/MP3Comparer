@@ -13,6 +13,13 @@ Example of folder comparison:
 - result of comparing folder 2 to 1:\
   ![alt text](image_examples/ex3.jpg "Result")
 
+Example of missing meta data finder:
+
+- folder:\
+  ![alt text](image_examples/ex4.jpg "Folder")
+- result of missing meta data finder:\
+  ![alt text](image_examples/ex5.jpg "Result")
+
 ## Details
 
 Missing tag data is defined as songs missing one of the following: album, album artist, artist, genre, title, track, or year.
