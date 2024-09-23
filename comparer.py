@@ -4,20 +4,27 @@ from collections import Counter
 import os
 import shutil
 
-#get all mp3s and meta data from folder 1
-def folderData(path1):
+def folderData(path):
+    ''' (str) -> list
+    
+    Where str is a path, find all mp3s in said path and return a list of mp3s with meta data and the path at [0]. Below is an exmaple of one mp3 in the specified path.
+    '''
     mp3s = []
-    mp3s.append(path1)
-    os.chdir(path1)
-    for x in os.listdir(path1): # for mp3s in directory
+    mp3s.append(path)
+    os.chdir(path)
+    for x in os.listdir(path): # for mp3s in directory
         if x.endswith(".mp3"):
             # append only mp3s to list
             mp3s.append(x + ", " + str(TinyTag.get(x)))
     return mp3s
 
-#compare the folders to see which mp3s are missing from which
-#USES ALL ID3 DATA
 def fullCompare(folder1, folder2):
+    '''(str, str) -> list
+
+    Finds what is missing from one of the two compared folders, depending on which folder the user wishes to check.
+    If ALL meta data is not the same, it will consider the mp3s as different. Prints all results found with meta data.
+    Returns a list of all filenames (without .mp3) as strings for the missing files and at [-1] is 1 or 2, depending on which folder the user selected.
+    '''
     choice = input("\nWould you like to find what is missing from: \n1. " + folder1[0] + "\n===OR===\n2. " + folder2[0] + "\nEnter the number of your choice:\n>")
     count = 0
     missingTitle = []
@@ -52,8 +59,12 @@ def fullCompare(folder1, folder2):
     print("Total: " + str(count) + "\n")
     return missingTitle
 
-# copy all differing mp3s to a specified folder destination
 def copyMP3s(mp3Names, origin, destination):
+    '''(list, str, str) -> None
+    
+    Removes the final element in the list (it is not a filename) and copies over the missing files. A list of the copied files is then printed.
+    NOTE: IF THE FILENAME OF THE FILE TO BE COPIED IS THE SAME AS A FILE IN THE DESTINATION, THE EXISTING FILE IN THE DESTINATION WILL BE OVERWRITTEN.
+    '''
     mp3Names.pop(-1)
     count = 0
     print("\nThe following MP3(s) have been successfully copied over: ")
@@ -67,8 +78,11 @@ def copyMP3s(mp3Names, origin, destination):
         print(str(count) + ". " + x)
     return
 
-# prompt for confirming copy process
 def inputCopyMP3s(origin, destination):
+    '''(str, str) -> int
+    
+    Prompt for the user to confirm their decision.
+    '''
     choice = input("\nCONFIRM: Copy all listed MP3(s) from '" + origin + "' to the destination '" + destination + "'? (y/n):\n>")
     valid = False
     while valid == False:
@@ -81,8 +95,11 @@ def inputCopyMP3s(origin, destination):
     elif choice == ['n', 'N']:
         return 0
 
-# list all mp3s with missing metadata
-def mp3sWithNulls(mp3Data, path):
+def mp3sWithNones(mp3Data, path):
+    '''(list, str) -> list
+    
+    Finds all mp3s with missing metadata (defined in the function) and prints a list of them out. The list is also returned.
+    '''
     os.chdir(path)
     mp3Data.pop(0)
     count = 0
@@ -99,8 +116,11 @@ def mp3sWithNulls(mp3Data, path):
         print("None! All MP3(s) have an album, album artist, artist, genre, title, track, and year.\n")
     return mp3DataList
 
-# menu option 1: obtain two paths, compare the folders, list differences, and optionally, copy over all missing mp3s
 def menuChoice1():
+    '''() -> None
+
+    Menu option 1: obtain two paths, compare the folders, list differences, and optionally, copy over all missing mp3s
+    '''
     # obtain path for folder 1
     path1 = input("Please enter the path of folder 1: \n>")
     folder1Data = folderData(path1)
@@ -137,52 +157,62 @@ def menuChoice1():
             raise Exception("Error: Path could not be found")
     return
 
-# list all mp3s in a folder that are missing metadata, and optionally, create a .txt file where specified
 def menuChoice2():
+    '''() -> None
+
+    List all mp3s in a folder that are missing metadata, and optionally, create a .txt file where specified
+    '''
     pathChoice2 = input("\nEnter the directory you would like to check:\n>")
     # read folder data
     folder1Data = folderData(pathChoice2)
-    # see function for specifications
-    mp3List = mp3sWithNulls(folder1Data, pathChoice2)
-    printChoice2 = input("\n Would you like to create a .txt file to list all results? (y/n)\n>")
-    valid2 = False
-    while valid2 == False:
-        if printChoice2 not in ['y', 'Y', 'n', 'N']:
-            printChoice2 = input("Please enter a valid choice:\n>")
-        else:
-            valid2 = True
-    # create .txt file
-    if printChoice2 in ['y', 'Y']:
-        fileName = input("Enter the desired name of the .txt file: (enter nothing for default name 'mp3List.txt'):\n>")
-        if fileName == "":
-            fileName = "mp3List.txt"
-        else:
-            fileName = fileName + ".txt"
-        validDestination = False
-        listDestination = input("Enter the destination .txt file:\n>")
-        while validDestination == False:
-            try:
-                os.chdir(listDestination)
-                validDestination = True
-            except:
-                listDestination = input("Please enter a valid path for the destination:\n>")
-        # Open the file in write mode
-        with open(fileName, 'w', encoding="utf-8") as file:
-            file.write("Searched folder: "+ pathChoice2)
-            file.write("\n===== MP3(s) Missing Meta Data =====\n")
-            for x in mp3List:
-                file.write(x + "\n")
-            file.close()
-        print(fileName + " created successfully at " + str(listDestination) + ".")
+    # see function mp3sWithNones for what None values are checked
+    mp3List = mp3sWithNones(folder1Data, pathChoice2)
+    if len(mp3List) != 0:
+        printChoice2 = input("\n Would you like to create a .txt file to list all results? (y/n)\n>")
+        valid2 = False
+        while valid2 == False:
+            if printChoice2 not in ['y', 'Y', 'n', 'N']:
+                printChoice2 = input("Please enter a valid choice:\n>")
+            else:
+                valid2 = True
+        # create .txt file
+        if printChoice2 in ['y', 'Y']:
+            fileName = input("Enter the desired name of the .txt file: (enter nothing for default name 'mp3List.txt'):\n>")
+            if fileName == "":
+                fileName = "mp3List.txt"
+            else:
+                fileName = fileName + ".txt"
+            validDestination = False
+            listDestination = input("Enter the destination .txt file:\n>")
+            while validDestination == False:
+                try:
+                    os.chdir(listDestination)
+                    validDestination = True
+                except:
+                    listDestination = input("Please enter a valid path for the destination:\n>")
+            # Open the file in write mode
+            with open(fileName, 'w', encoding="utf-8") as file:
+                file.write("Searched folder: "+ pathChoice2)
+                file.write("\n===== MP3(s) Missing Meta Data =====\n")
+                for x in mp3List:
+                    file.write(x + "\n")
+                file.close()
+            print(fileName + " created successfully at " + str(listDestination) + ".")
     return
 
-# exits the menu
 def menuChoice3():
+    ''' () -> bool
+    
+    Print the ending message and return boolean True to end the program.
+    '''
     print("Thank you for using this program!")
-    return
+    return True
 
 def main():
-    # menu functionality implemented here
+    '''() -> None
+
+    Main menu functionality is implemented here. After exiting, program ends.    
+    '''
     cwd = os.getcwd()
     end = False # exits menu if true
     while end == False:
@@ -203,8 +233,7 @@ def main():
             menuChoice2()
         # exits program
         elif choice == "3":
-            menuChoice3()
-            end = True
+            end = menuChoice3()
     return
 
 main()
